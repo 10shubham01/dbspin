@@ -1,0 +1,35 @@
+{
+  "defaults": {
+    "tool": "psql",
+    "environment": "dev",
+    "portAlias": "dev",
+    "database": "main_db"
+  },
+
+  "prompts": {
+    "tool": false,
+    "environment": true,
+    "port": true,
+    "database": true
+  },
+
+  "availableTools": ["pgcli", "psql"],
+  "environments": {
+    "dev": {
+      "portAliases": {
+        "dev": "6004",
+        "qa": "6005",
+        "uat": "6006"
+      },
+      "databases": ["main_db", "analytics_db"]
+    },
+    "prod": {
+      "portAliases": {
+        "prod": "6001",
+        "d1": "6002",
+        "d2": "6003"
+      },
+      "databases": ["main_db", "analytics_db"]
+    }
+  }
+}

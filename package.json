@@ -1,0 +1,33 @@
+{
+  "name": "dbspin",
+  "version": "1.0.0",
+  "main": "bin/index.js",
+  "type": "module",
+  "bin": {
+    "dbspin": "bin/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "pgcli",
+    "psql",
+    "postgres",
+    "terminal",
+    "database",
+    "connect"
+  ],
+  "author": "Shubham Gupta",
+  "homepage": "https://github.com/10shubham01/",
+  "license": "ISC",
+  "description": "A terminal-based CLI to connect to PostgreSQL databases using tools like pgcli or psql with environment-based presets and port aliases.",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "dotenv": "^17.0.1",
+    "enquirer": "^2.4.1",
+    "figlet": "^1.8.1",
+    "gradient-string": "^3.0.0",
+    "which": "^5.0.0"
+  }
+}
