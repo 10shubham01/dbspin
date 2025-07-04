@@ -89,7 +89,7 @@ Edit the `dbconfig.json` file to match your setup:
 
 ```bash
 npm link
-dbspin
+run-dbspin
 ```
 
 ---
