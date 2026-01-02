@@ -78,6 +78,39 @@ function getInstallInstructions(cmd) {
 
 async function main() {
   try {
+    // Parse command line arguments
+    const args = process.argv.slice(2);
+
+    // Check for help flag
+    if (args.includes('--help') || args.includes('-h')) {
+      console.log(`
+${chalk.bold('DB Connect CLI')}
+
+${chalk.cyan('Interactive Mode:')}
+  dbspin
+
+${chalk.cyan('Direct Mode:')}
+  dbspin <port_alias> <database_name>
+
+${chalk.cyan('Options:')}
+  -h, --help    Show this help message
+
+${chalk.cyan('Examples:')}
+  dbspin d7 db_novio_score
+  dbspin dev db_credilio
+      `);
+      process.exit(0);
+    }
+
+    const providedAlias = args[0];
+    const providedDatabase = args[1];
+
+    // Validate that we don't have extra arguments
+    if (args.length > 2) {
+      console.error(chalk.red('❌ Too many arguments. Use --help for usage information.'));
+      process.exit(1);
+    }
+
     const envFiles = fs.readdirSync(path.join(__dirname, '..'))
       .filter(f => f.startsWith('.env.') && !f.endsWith('.example'));
 
@@ -133,8 +166,8 @@ async function main() {
       selectedTool = await toolPrompt.run();
     }
 
-    let selectedAlias = defaults.portAlias;
-    if (prompts.port !== false) {
+    let selectedAlias = providedAlias || defaults.portAlias;
+    if (!providedAlias && prompts.port !== false) {
       const portPrompt = new AutoComplete({
         name: 'portAlias',
         message: 'Select port alias',
@@ -144,10 +177,16 @@ async function main() {
       selectedAlias = await portPrompt.run();
     }
 
+    // Validate provided alias
+    if (providedAlias && !environmentConfig.portAliases[providedAlias]) {
+      console.error(chalk.red(`❌ Invalid port alias "${providedAlias}". Available aliases: ${Object.keys(environmentConfig.portAliases).join(', ')}`));
+      process.exit(1);
+    }
+
     const selectedPort = environmentConfig.portAliases[selectedAlias];
 
-    let selectedDatabase = defaults.database;
-    if (prompts.database !== false) {
+    let selectedDatabase = providedDatabase || defaults.database;
+    if (!providedDatabase && prompts.database !== false) {
       const dbPrompt = new AutoComplete({
         name: 'database',
         message: 'Select database',
@@ -155,6 +194,12 @@ async function main() {
         initial: environmentConfig.databases.indexOf(defaults.database),
       });
       selectedDatabase = await dbPrompt.run();
+    }
+
+    // Validate provided database
+    if (providedDatabase && !environmentConfig.databases.includes(providedDatabase)) {
+      console.error(chalk.red(`❌ Invalid database "${providedDatabase}". Available databases: ${environmentConfig.databases.join(', ')}`));
+      process.exit(1);
     }
 
     console.clear();
@@ -165,6 +210,18 @@ async function main() {
       DB_READ_PROXY_USER,
       DB_READ_PROXY_PASSWORD,
     } = process.env;
+
+    // Set up timezone and formatting for the database client
+    let pgcliConfigPath;
+    if (selectedTool === 'psql') {
+      const psqlrcPath = path.join(process.cwd(), '.psqlrc');
+      const psqlrcContent = `SET timezone = 'Asia/Kolkata';\nSET datestyle = 'Postgres, DMY';\n`;
+      fs.writeFileSync(psqlrcPath, psqlrcContent);
+    } else if (selectedTool === 'pgcli') {
+      pgcliConfigPath = path.join(os.tmpdir(), `pgcli_config_${Date.now()}`);
+      const configContent = `[main]\non_startup = SET timezone = 'Asia/Kolkata'; SET datestyle = 'Postgres, DMY';\n`;
+      fs.writeFileSync(pgcliConfigPath, configContent);
+    }
 
     if (!DB_READ_PROXY_HOST || !DB_READ_PROXY_USER || !DB_READ_PROXY_PASSWORD) {
       console.error(chalk.red('❌ Missing required environment variables.'));
@@ -179,10 +236,16 @@ async function main() {
       ? ['-h', DB_READ_PROXY_HOST, '-p', selectedPort, '-U', DB_READ_PROXY_USER, '-d', selectedDatabase]
       : ['-h', DB_READ_PROXY_HOST, '-p', selectedPort, '-U', DB_READ_PROXY_USER, selectedDatabase];
 
+    if (selectedTool === 'pgcli') {
+      cliArgs.push('--pgclirc', pgcliConfigPath);
+    }
+
     const dbProcess = spawn(selectedTool, cliArgs, {
       env: {
         ...process.env,
         PGPASSWORD: DB_READ_PROXY_PASSWORD,
+        TZ: 'Asia/Kolkata',
+        PGTZ: 'Asia/Kolkata',
       },
       stdio: 'inherit',
     });

@@ -12,6 +12,35 @@ Made with love by [Shubham](https://github.com/10shubham01)
 - Choose between `pgcli` or `psql`
 - Select environment (if multiple `.env` files exist)
 - Pick port alias and database from interactive prompts
+- Support for direct command-line arguments
+
+---
+
+## Usage
+
+### Interactive Mode (default)
+
+```bash
+dbspin
+```
+
+This will prompt you to select environment, tool, port alias, and database interactively.
+
+### Direct Mode
+
+You can also pass the port alias and database directly as arguments:
+
+```bash
+dbspin <port_alias> <database_name>
+```
+
+For example:
+
+```bash
+dbspin d7 db_novio_score
+```
+
+This will skip the interactive prompts for port alias and database, using the provided values directly.
 
 ---
 
@@ -89,8 +118,34 @@ Edit the `dbconfig.json` file to match your setup:
 
 ```bash
 npm link
-run-dbspin
+dbspin
 ```
+
+Or with direct arguments:
+
+```bash
+dbspin d7 db_novio_score
+```
+
+---
+
+## Setup Tab Completion (Optional)
+
+For zsh completion, add this to your `~/.zshrc`:
+
+```bash
+# Add dbspin completion
+source /path/to/dbspin/dbspin-completion.zsh
+```
+
+Or run this command to add it automatically:
+
+```bash
+echo "source $(pwd)/dbspin-completion.zsh" >> ~/.zshrc
+source ~/.zshrc
+```
+
+Now you can use tab completion for port aliases and database names!
 
 ---
 

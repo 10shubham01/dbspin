@@ -4,7 +4,7 @@
   "main": "bin/index.js",
   "type": "module",
   "bin": {
-    "run-dbspin": "bin/index.js"
+    "dbspin": "bin/index.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -28,6 +28,7 @@
     "enquirer": "^2.4.1",
     "figlet": "^1.8.1",
     "gradient-string": "^3.0.0",
+    "json-beautify": "^1.1.1",
     "which": "^5.0.0"
   }
 }

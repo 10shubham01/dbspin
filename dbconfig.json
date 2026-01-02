@@ -1,9 +1,9 @@
 {
   "defaults": {
-    "tool": "psql",
+    "tool": "pgcli",
     "environment": "dev",
     "portAlias": "dev",
-    "database": "main_db"
+    "database": "db_credilio"
   },
 
   "prompts": {
@@ -17,11 +17,23 @@
   "environments": {
     "dev": {
       "portAliases": {
-        "dev": "6004",
-        "qa": "6005",
-        "uat": "6006"
+        "d1": "6004",
+        "d2": "6005",
+        "d3": "6006",
+        "d4": "6007",
+        "d5": "6008",
+        "d6": "6009",
+        "d7": "6010",
+        "d8": "6011",
+        "d9": "6012",
+        "d10": "6013",
+        "d11": "6014",
+        "d12": "6015",
+        "d13": "6016",
+        "d14": "6017",
+        "d15": "6018"
       },
-      "databases": ["main_db", "analytics_db"]
+      "databases": ["db_credilio", "db_customer", "db_bureau", "db_novio_score"]
     },
     "prod": {
       "portAliases": {
@@ -29,7 +41,7 @@
         "d1": "6002",
         "d2": "6003"
       },
-      "databases": ["main_db", "analytics_db"]
+      "databases": ["db_credilio", "db_customer"]
     }
   }
 }
