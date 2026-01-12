@@ -29,6 +29,8 @@
     "figlet": "^1.8.1",
     "gradient-string": "^3.0.0",
     "json-beautify": "^1.1.1",
+    "open": "^11.0.0",
+    "pg": "^8.16.3",
     "which": "^5.0.0"
   }
 }

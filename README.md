@@ -13,6 +13,7 @@ Made with love by [Shubham](https://github.com/10shubham01)
 - Select environment (if multiple `.env` files exist)
 - Pick port alias and database from interactive prompts
 - Support for direct command-line arguments
+- **📊 Visualize query results with interactive Chart.js graphs**
 
 ---
 
@@ -41,6 +42,41 @@ dbspin d7 db_novio_score
 ```
 
 This will skip the interactive prompts for port alias and database, using the provided values directly.
+
+### Visualization Mode 📊
+
+Execute a SQL query and visualize the results with interactive Chart.js graphs:
+
+```bash
+dbspin --visualize <port_alias> <database> "<SQL_QUERY>"
+# or use the short form
+dbspin -v <port_alias> <database> "<SQL_QUERY>"
+```
+
+**Examples:**
+
+```bash
+# Basic visualization - auto-detects best chart type
+dbspin -v d7 db_novio_score "SELECT status, COUNT(*) as count FROM users GROUP BY status"
+
+# Specify chart type (bar, line, pie, doughnut, radar)
+dbspin -v d7 db_novio_score "SELECT date, revenue FROM sales LIMIT 10" --chart line
+
+# Time series data
+dbspin --visualize d7 db_customer "SELECT DATE(created_at) as date, COUNT(*) as signups FROM customers WHERE created_at >= NOW() - INTERVAL '30 days' GROUP BY DATE(created_at) ORDER BY date"
+
+# Multiple metrics
+dbspin -v d7 db_credilio "SELECT month, revenue, costs, profit FROM monthly_stats" --chart line
+```
+
+**Features:**
+- 📈 Interactive charts with Chart.js
+- 🎨 Multiple chart types: Bar, Line, Pie, Doughnut, Radar
+- 📊 Auto-detection of optimal chart type
+- 📋 Data table view alongside charts
+- 🔄 Switch between chart types in real-time
+- 🎯 Beautiful gradient UI
+- 📱 Responsive design
 
 ---
 
